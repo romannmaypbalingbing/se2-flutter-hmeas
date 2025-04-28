@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:VitaWatch/routes/app_routes.dart';
+import 'package:vitawatch/routes/app_routes.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,10 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: goRouter,
       title: 'VitaWatch',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
     );
-  },
+  }
 }

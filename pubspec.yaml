@@ -1,4 +1,4 @@
-name: VitaWatch
+name: vitawatch
 description: "A flutter project for the SE2 course at Bicol University. This project is a mobile application that allows users to monitor their health and fitness data, including heart rate, blood pressure, and other vital signs. 
 #The app also provides personalized recommendations for improving health and wellness based on the user's data."
 # The following line prevents the package from being accidentally published to

@@ -1,27 +1,8 @@
-/// This file is the main entry point of the Flutter application.
-
+// This file is the main entry point of the Flutter application.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'routes/app_routes.dart';
+import 'package:vitawatch/app.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
-  
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: goRouter,
-      title: 'VitaWatch',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
-    );
-  },
 }
