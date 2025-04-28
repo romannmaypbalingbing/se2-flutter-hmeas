@@ -1,14 +1,5 @@
-/// This file is the main entry point of the Flutter application.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'routes/app_routes.dart';
-
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
-  
-}
+import 'package:VitaWatch/routes/app_routes.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
