@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hmeas/ui/common/widgets/labeled_text_field.dart';
-import 'package:hmeas/ui/common/widgets/step_progress_indicator.dart';
+import 'package:vitawatch/common/widgets/labeled_text_field.dart';
+import 'package:vitawatch/common/widgets/step_progress_indicator.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
   const CreatePasswordScreen({super.key});
