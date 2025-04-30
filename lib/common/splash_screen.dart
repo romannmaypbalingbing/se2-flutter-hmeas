@@ -20,7 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
     // Simulate a delay for the splash screen
     await Future.delayed(const Duration(seconds: 3));
 
-    GoRouter.of(context).go('/account-type');
+    // Navigate to the login screen after the delay
+    if (mounted) {
+      context.go(AuthRoutes.login);
+    }
   }
 
   @override
