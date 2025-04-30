@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:vitawatch/features/auth/routes/auth_routes.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToNextScreen();
+  }
+
+  void _navigateToNextScreen() async {
+    // Simulate a delay for the splash screen
+    await Future.delayed(const Duration(seconds: 3));
+
+    GoRouter.of(context).go('/account-type');
+  }
 
   @override
   Widget build(BuildContext context) {
