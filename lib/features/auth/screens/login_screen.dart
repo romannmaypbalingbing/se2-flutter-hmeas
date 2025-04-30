@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+//add library for error handling
 
 ///  A widget that displays a login screen.
 class Login extends StatefulWidget {
@@ -16,12 +19,12 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
         title: const Text(
           'Log in',
           style: TextStyle(
@@ -122,11 +125,28 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 24),
 
+            //Login Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Handle login
+                onPressed: () async {
+                  // Get text
+                  final email = emailController.text.trim();
+                  final password = passwordController.text.trim();
+
+                  // Validate email and password
+                  if (email.isEmpty || password.isEmpty) {
+                    // Show error message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please enter email and password'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  /// add modified snack bar hereeeee
+                  /// add firebase auth here
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2952D9),
@@ -233,7 +253,8 @@ class _LoginState extends State<Login> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Handle sign up
+                    // Navigate to sign up screen
+                    context.go(AuthRoutes.accountType);
                   },
                   child: const Text(
                     'Sign Up',
@@ -251,5 +272,13 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  //prevent memory leaks ->
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

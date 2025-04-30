@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:vitawatch/common/widgets/step_progress_indicator.dart';
 import 'package:vitawatch/common/widgets/labeled_text_field.dart'; // Make sure to import the LabeledTextField widget
 
+//routing
+import 'package:go_router/go_router.dart';
+import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+import 'package:vitawatch/constants/user_roles.dart';
+
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -16,8 +21,26 @@ class _PatientRegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
 
+  UserRole?
+  _selectedUserRole; //used enum; define the variable to store the value for the user
+
+  @override //TODO: find out what this does
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    //acess user role
+    final Object? extraData = GoRouterState.of(context).extra;
+
+    //check
+    if (_selectedUserRole == null && extraData != null) {
+      if (extraData is UserRole) {
+        _selectedUserRole = extraData;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -83,7 +106,7 @@ class _PatientRegistrationScreenState extends State<RegistrationScreen> {
             ),
             LabeledTextField(label: 'Gender', controller: genderController),
 
-            const SizedBox(height: 48),
+            const SizedBox(height: 16),
 
             SizedBox(
               width: double.infinity,
@@ -111,9 +134,92 @@ class _PatientRegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
             ),
+
+            SizedBox(height: 28),
+
+            //Google Log In Button
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {
+                  // Handle login
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: Colors.blueGrey.withValues(alpha: 0.5),
+                    width: 1,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/google_logo.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Sign in with Google',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'PlusJakartaSans',
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 16),
+
+            //Sign Up Button
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Already have an account?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                    fontFamily: 'OpenJakartaSans',
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.go(AuthRoutes.login);
+                  },
+                  child: const Text(
+                    'Log In',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF2952D9),
+                      fontFamily: 'ClashDisplay',
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    birthdayController.dispose();
+    genderController.dispose();
   }
 }

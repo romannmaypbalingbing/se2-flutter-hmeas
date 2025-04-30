@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vitawatch/common/widgets/step_progress_indicator.dart';
 
+import 'package:go_router/go_router.dart';
+import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+
+import 'package:vitawatch/constants/user_roles.dart';
+
 /// This displays the choose account type screen.
 class AccountTypeScreen extends StatelessWidget {
   const AccountTypeScreen({super.key});
@@ -13,7 +18,11 @@ class AccountTypeScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(AuthRoutes.login);
+            }
           },
         ),
         title: const Text(
@@ -57,9 +66,11 @@ class AccountTypeScreen extends StatelessWidget {
 
             const SizedBox(height: 48),
 
+            //Patient Selection Card
             InkWell(
               onTap: () {
-                null;
+                // navigation to registration screen, with user role 'patient'
+                context.push(AuthRoutes.registration, extra: UserRole.patient);
               },
               borderRadius: BorderRadius.circular(8.0),
               child: Container(
@@ -107,6 +118,7 @@ class AccountTypeScreen extends StatelessWidget {
 
             const SizedBox(height: 16.0),
 
+            //Guardian Selection Card
             InkWell(
               onTap: () {
                 null;

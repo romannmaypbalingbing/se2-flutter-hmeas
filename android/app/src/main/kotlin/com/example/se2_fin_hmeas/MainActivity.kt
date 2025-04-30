@@ -1,4 +1,4 @@
-package com.example.se2_fin_hmeas
+package com.example.vitawatch
 
 import io.flutter.embedding.android.FlutterActivity
 
