@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+import 'package:vitawatch/common/widgets/labeled_text_field.dart';
+
 //add library for error handling
 
 ///  A widget that displays a login screen.
@@ -19,12 +21,6 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        // ),
         title: const Text(
           'Log in',
           style: TextStyle(
@@ -60,50 +56,19 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 64),
 
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Email',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'ClashDisplay',
-                    ),
-                  ),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'hello@example.com',
-                      border: UnderlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'ClashDisplay',
-                    ),
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                      labelText: '*********',
-                      border: UnderlineInputBorder(),
-                    ),
-                    obscureText: true,
-                  ),
-                ],
-              ),
+            LabeledTextField(
+              label: 'Email',
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
+
+            LabeledTextField(
+              label: 'Password',
+              controller: passwordController,
+              obscureText: true,
+            ),
 
             Align(
               alignment: Alignment.centerRight,
@@ -123,7 +88,7 @@ class _LoginState extends State<Login> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 170),
 
             //Login Button
             SizedBox(

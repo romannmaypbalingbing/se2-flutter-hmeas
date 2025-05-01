@@ -7,5 +7,9 @@ final authServiceProvider = Provider<AuthService>((ref) {
 });
 
 final authStateChangesProvider = StreamProvider((ref) {
-  return ref.watch(authServiceProvider)._auth.authStateChanges();
+  return ref.watch(authServiceProvider).authStateChanges;
 });
+
+final registrationDataProvider = StateProvider<Map<String, dynamic>>(
+  (ref) => {},
+);

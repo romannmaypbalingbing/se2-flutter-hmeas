@@ -10,6 +10,9 @@ class AuthService {
     : _auth = fireBaseAuth ?? FirebaseAuth.instance,
       _googleSignIn = googleSignIn ?? GoogleSignIn();
 
+  //public getter for auth instance
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
   Future<UserCredential> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();

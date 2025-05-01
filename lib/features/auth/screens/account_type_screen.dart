@@ -121,7 +121,8 @@ class AccountTypeScreen extends StatelessWidget {
             //Guardian Selection Card
             InkWell(
               onTap: () {
-                null;
+                // navigation to registration screen, with user role 'patient'
+                context.push(AuthRoutes.registration, extra: UserRole.guardian);
               },
               borderRadius: BorderRadius.circular(8.0),
               child: Container(

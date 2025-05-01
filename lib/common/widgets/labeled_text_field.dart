@@ -5,6 +5,7 @@ class LabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final TextInputType keyboardType;
+  final String? Function(String?)? validator;
 
   const LabeledTextField({
     super.key,
@@ -12,40 +13,46 @@ class LabeledTextField extends StatelessWidget {
     required this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.blueGrey.shade600,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'ClashDisplay',
-          ),
-        ),
-        const SizedBox(height: 0),
-        TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 8),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey.shade300),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF2952D9), width: 2),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'ClashDisplay',
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-      ],
+          TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            validator: validator,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'PlusJakartaSans',
+            ),
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF4B4B4B), width: 2),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF4B4B4B)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
