@@ -90,7 +90,7 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 170),
 
-            //Login Button
+            //next
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -109,10 +109,12 @@ class _LoginState extends State<Login> {
                     );
                     return;
                   }
+                  context.go(AuthRoutes.dashboard);
 
                   /// add modified snack bar hereeeee
                   /// add firebase auth here
                 },
+                //next button
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2952D9),
                   elevation: 7,

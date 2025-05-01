@@ -19,7 +19,8 @@ class RegistrationScreen extends ConsumerStatefulWidget {
       _PatientRegistrationScreenState();
 }
 
-class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> {
+class _PatientRegistrationScreenState
+    extends ConsumerState<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>(); //used to validate the form
 
   final TextEditingController firstNameController = TextEditingController();
@@ -30,7 +31,8 @@ class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> 
 
   bool _isLoading = false; //used to check if the app is loading
   String? _error; //used to check if there is an error
-  UserRole? _selectedUserRole; //used enum; define the variable to store the value for the user
+  UserRole?
+  _selectedUserRole; //used enum; define the variable to store the value for the user
 
   @override //TODO: find out what this does
   void initState() {
@@ -38,26 +40,27 @@ class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> 
   }
 
   void _onNextPressed() async {
-    if(!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) {
       return; // If the form is not valid, do not proceed
     }
-      setState(() => _isLoading = true); // Set loading state to true
-      
-      final registrationData = {
-        'firstName': firstNameController.text.trim(),
-        'lastName': lastNameController.text.trim(),
-        'email': emailController.text.trim(),
-        'birthday': birthdayController.text.trim(),
-        'gender': genderController.text.trim(),
-        'role': _selectedUserRole?.name,
-      };
+    setState(() => _isLoading = true); // Set loading state to true
 
-      ref.read(registrationDataProvider.notifier).state = registrationData; // Store the registration data in the provider
+    final registrationData = {
+      'firstName': firstNameController.text.trim(),
+      'lastName': lastNameController.text.trim(),
+      'email': emailController.text.trim(),
+      'birthday': birthdayController.text.trim(),
+      'gender': genderController.text.trim(),
+      'role': _selectedUserRole?.name,
+    };
 
-      setState(() => _isLoading = false); // Set loading state to false
+    ref.read(registrationDataProvider.notifier).state =
+        registrationData; // Store the registration data in the provider
 
-      if(!mounted) return; // Check if the widget is still mounted
-      context.go(AuthRoutes.createPassword);
+    setState(() => _isLoading = false); // Set loading state to false
+
+    if (!mounted) return; // Check if the widget is still mounted
+    context.go(AuthRoutes.createPassword);
   }
 
   @override
@@ -95,7 +98,7 @@ class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> 
         padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
-        
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -123,6 +126,7 @@ class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> 
               LabeledTextField(
                 label: 'First Name',
                 controller: firstNameController,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 8),
               LabeledTextField(
@@ -183,14 +187,16 @@ class _PatientRegistrationScreenState extends ConsumerState<RegistrationScreen> 
                     // Handle login
                     final authService = ref.read(authServiceProvider);
                     try {
-                      final userCredential = await authService.signInWithGoogle();
+                      final userCredential =
+                          await authService.signInWithGoogle();
                       debugPrint('User signed in: ${userCredential.user?.uid}');
                       // Navigate to the next screen after successful login
                       if (!mounted) return;
                       context.go(AuthRoutes.createPassword);
                     } on FirebaseAuthException catch (e) {
+                      if (!mounted) return;
                       showDialog(
-                        if (mounted) context: context,
+                        context: context,
                         builder:
                             (context) => AlertDialog(
                               title: const Text("Sign-in failed"),
