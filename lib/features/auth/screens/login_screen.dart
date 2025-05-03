@@ -1,11 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitawatch/features/auth/routes/auth_routes.dart';
 import 'package:vitawatch/common/widgets/labeled_text_field.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+//add library for error handling >> awesome_snackbar_content.dart
 
-//add library for error handling
+/// Login page for the VitaWatch app.
 
 ///  A widget that displays a login screen.
+/// Allows users to enter their email and password to log in.
+/// Also provides options for password recovery and Google login.
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -32,6 +38,7 @@ class _LoginState extends State<Login> {
         centerTitle: true,
       ),
 
+      /// Main body of the login screen
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -56,6 +63,7 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 64),
 
+            /// Labeled text fields for email and password input
             LabeledTextField(
               label: 'Email',
               controller: emailController,
@@ -70,6 +78,7 @@ class _LoginState extends State<Login> {
               obscureText: true,
             ),
 
+            /// TODO: add handling for password recovery
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -90,7 +99,7 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 170),
 
-            //next
+            // Next button to proceed with login
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -102,16 +111,52 @@ class _LoginState extends State<Login> {
                   // Validate email and password
                   if (email.isEmpty || password.isEmpty) {
                     // Show error message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please enter email and password'),
+                    final snackBar = SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Oh Snap!',
+                        message: 'Please enter your email and password',
+                        contentType: ContentType.failure,
                       ),
                     );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   }
-                  context.go(AuthRoutes.dashboard);
 
-                  /// add modified snack bar hereeeee
+                  try {
+                    //Try sign in with email and password
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: email,
+                      password: password,
+                    );
+                    if (!mounted) return;
+                    context.go(AuthRoutes.dashboard);
+                  } on FirebaseAuthException catch (e) {
+                    if (!mounted) return;
+                    final message = switch (e.code) {
+                      'user-not-found' => 'No user found for that email.',
+                      'wrong-password' =>
+                        'Wrong password provided for that user.',
+                      _ => 'An error occurred. Please try again.',
+                    };
+
+                    if (!mounted) return;
+                    final snackBar = SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Oh Snap!',
+                        message: message,
+                        contentType: ContentType.failure,
+                      ),
+                    );
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+
                   /// add firebase auth here
                 },
                 //next button
