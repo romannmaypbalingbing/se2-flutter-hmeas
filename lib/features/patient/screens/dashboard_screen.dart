@@ -1,6 +1,6 @@
 /// imma mess around here
 /// attempt to modularize the components
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
