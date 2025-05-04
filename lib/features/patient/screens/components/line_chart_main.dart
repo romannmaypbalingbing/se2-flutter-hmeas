@@ -69,7 +69,6 @@ class _LineChartMainState extends ConsumerState<LineChartMain> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
 
                 Wrap(
                   spacing: 12,
@@ -82,6 +81,8 @@ class _LineChartMainState extends ConsumerState<LineChartMain> {
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 12),
 
                 SizedBox(
                   height: 150,
@@ -248,7 +249,7 @@ class LegendItem extends StatelessWidget {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(shape: BoxShape.circle),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
         const SizedBox(width: 4),
         Text(label, style: TextStyle(fontSize: 12)),
