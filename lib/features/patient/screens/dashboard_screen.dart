@@ -1,5 +1,6 @@
 import 'package:vitawatch/features/patient/screens/components/line_chart_main.dart';
 import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
+import 'package:vitawatch/features/patient/screens/components/device_status.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -148,105 +149,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       const SizedBox(width: 10),
 
-                      // RIGHT COLUMN
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          height: 100,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Device status',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'connected',
-                                        style: TextStyle(
-                                          color: Colors.yellowAccent,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          fontFamily: 'ClashDisplay',
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Color.fromARGB(
-                                            255,
-                                            20,
-                                            51,
-                                            150,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Wi-Fi',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 12),
-                                  Column(
-                                    children: [
-                                      Icon(
-                                        Icons.wifi,
-                                        color: Colors.white,
-                                        size: 18,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(height: 10),
-                                          Icon(
-                                            Icons.battery_full,
-                                            color: Colors.white,
-                                            size: 18,
-                                          ),
-
-                                          SizedBox(width: 4),
-                                          Text(
-                                            '79 %',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                      // DEVICE_STATUS
+                      const DeviceStatus(
+                        connected: true,
+                        batteryLevel: 85,
+                        connectionType: 'Wi-Fi',
                       ),
                     ],
                   ),
