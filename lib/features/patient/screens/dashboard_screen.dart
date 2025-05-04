@@ -1,4 +1,5 @@
 import 'package:vitawatch/features/patient/screens/components/line_chart_main.dart';
+import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -284,19 +285,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
 
-      // BOTTOM NAVIGATION
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2952D9),
-        unselectedItemColor: Colors.black38,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.monitor_heart), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
       ),
     );
   }
