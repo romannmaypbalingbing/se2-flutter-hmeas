@@ -111,6 +111,7 @@ class _LoginState extends State<Login> {
                   // Validate email and password
                   if (email.isEmpty || password.isEmpty) {
                     // Show error message
+                    if (!mounted) return;
                     final snackBar = SnackBar(
                       elevation: 0,
                       behavior: SnackBarBehavior.floating,
@@ -131,13 +132,18 @@ class _LoginState extends State<Login> {
                       email: email,
                       password: password,
                     );
+
                     if (!mounted) return;
                     context.go(AuthRoutes.dashboard);
                   } on FirebaseAuthException catch (e) {
                     if (!mounted) return;
+
+                    // TODO: fix this error handling; always goes to default case; separate error handling to another file
+                    debugPrint(e.toString());
+
                     final message = switch (e.code) {
                       'user-not-found' => 'No user found for that email.',
-                      'wrong-password' =>
+                      'The supplied auth credential is incorrect, malformed or has expired.' =>
                         'Wrong password provided for that user.',
                       _ => 'An error occurred. Please try again.',
                     };

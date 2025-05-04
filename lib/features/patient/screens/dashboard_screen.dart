@@ -1,6 +1,4 @@
-/// imma mess around here
-/// attempt to modularize the components
-import 'package:fl_chart/fl_chart.dart';
+import 'package:vitawatch/features/patient/screens/components/line_chart_main.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -258,105 +256,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 20),
 
             // VITAL SIGNS OVERVIEW
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Vital Signs Overview',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          height: 120,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            // child: VitalSignsGraph(
-                            //   AboutDialog(
-                            //     dataPoints: [
-                            //       HealthDataPoint(x: 1, y: 36.7),
-                            //       HealthDataPoint(x: 2, y: 36.8),
-                            //       HealthDataPoint(x: 3, y: 36.9),
-                            //       HealthDataPoint(x: 4, y: 37.0),
-                            //       HealthDataPoint(x: 5, y: 37.1),
-                            //     ],
-                            //   ),
-                            // ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // MONITORING REMINDER
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Next Monitoring Reminder',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Next check in',
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        Chip(
-                          label: Text('30 mins'),
-                          backgroundColor: Color(0xFF2952D9),
-                          labelStyle: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const LineChartMain(),
 
             const SizedBox(height: 16),
 
