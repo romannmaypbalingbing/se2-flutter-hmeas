@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitawatch/common/providers/vital_signs_notifier.dart';
+import 'package:vitawatch/features/patient/test/test_data.dart';
 
 class LineChartMain extends ConsumerStatefulWidget {
   const LineChartMain({super.key});
@@ -11,29 +13,20 @@ class LineChartMain extends ConsumerStatefulWidget {
 }
 
 class _LineChartMainState extends ConsumerState<LineChartMain> {
+  bool isShowingMainData = true;
+
   @override
   Widget build(BuildContext context) {
     final vitalSigns = ref.watch(vitalSignsProvider);
 
-    final List<double> tempData =
-        vitalSigns['temperature']?.cast<double>() ?? [];
-    final List<double> heartRateData =
-        vitalSigns['heartRate']?.cast<double>() ?? [];
-    final List<double> spo2Data = vitalSigns['spo2']?.cast<double>() ?? [];
+    // Uncomment below if using actual data:
+    // final List<FlSpot> tempData = (vitalSigns['temperature'] ?? []).cast<FlSpot>();
+    // final List<FlSpot> heartRateData = (vitalSigns['heartRate'] ?? []).cast<FlSpot>();
+    // final List<FlSpot> spo2Data = (vitalSigns['spo2'] ?? []).cast<FlSpot>();
 
-    //Build FlSpots (x = index, y = value)
-    final List<FlSpot> tempSpots = [
-      for (int i = 0; i < tempData.length; i++)
-        FlSpot(i.toDouble(), tempData[i]),
-    ];
-    final List<FlSpot> hearRateSpots = [
-      for (int i = 0; i < heartRateData.length; i++)
-        FlSpot(i.toDouble(), heartRateData[i]),
-    ];
-    final List<FlSpot> spo2Spots = [
-      for (int i = 0; i < spo2Data.length; i++)
-        FlSpot(i.toDouble(), spo2Data[i]),
-    ];
+    final List<FlSpot> tempData = testTempData;
+    final List<FlSpot> heartRateData = testHeartRateData;
+    final List<FlSpot> spo2Data = testSpo2Data;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -55,40 +48,53 @@ class _LineChartMainState extends ConsumerState<LineChartMain> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Vital Signs Overview',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'ClashDisplay',
-                  ),
+                Row(
+                  children: [
+                    const Text(
+                      'Vital Signs Overview',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'ClashDisplay',
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () {
+                        setState(() {
+                          isShowingMainData = !isShowingMainData;
+                        });
+                      },
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 5),
 
-                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  children: [
+                    const LegendItem(color: Colors.blue, label: 'SpO₂'),
+                    const LegendItem(color: Colors.red, label: 'Heart Rate'),
+                    const LegendItem(
+                      color: Colors.orange,
+                      label: 'Temperature',
+                    ),
+                  ],
+                ),
 
                 SizedBox(
-                  height: 250,
-                  width: double.infinity,
-                  child: _LineChart(
-                    tempSpots: tempSpots,
-                    heartRateSpots: hearRateSpots,
-                    spo2Spots: spo2Spots,
+                  height: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: _LineChart(
+                      isShowingMainData: isShowingMainData,
+                      tempData: tempData,
+                      heartRateData: heartRateData,
+                      spo2Data: spo2Data,
+                    ),
                   ),
                 ),
-
-                // Container(
-                //   height: 200,
-                //   width: double.infinity,
-                //   decoration: BoxDecoration(
-                //     color: Colors.black12,
-                //     borderRadius: BorderRadius.circular(12),
-                //   ),
-                //   child: Center(
-                //     child: Text(
-                //       'Temp: ${vitalSigns['temperature']?.join(", ")}\nHeart Rate: ${vitalSigns['heartRate']?.join(", ")}',
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -99,73 +105,154 @@ class _LineChartMainState extends ConsumerState<LineChartMain> {
 }
 
 class _LineChart extends StatelessWidget {
-  final List<FlSpot> tempSpots;
-  final List<FlSpot> heartRateSpots;
-  final List<FlSpot> spo2Spots;
-
   const _LineChart({
-    required this.tempSpots,
-    required this.heartRateSpots,
-    required this.spo2Spots,
+    required this.isShowingMainData,
+    required this.tempData,
+    required this.heartRateData,
+    required this.spo2Data,
   });
+
+  final bool isShowingMainData;
+  final List<FlSpot> tempData;
+  final List<FlSpot> heartRateData;
+  final List<FlSpot> spo2Data;
 
   @override
   Widget build(BuildContext context) {
-    final maxX =
-        [
-          tempSpots.length.toDouble(),
-          heartRateSpots.length.toDouble(),
-          spo2Spots.length.toDouble(),
-        ].reduce((a, b) => a > b ? a : b) -
-        1;
-
     return LineChart(
-      LineChartData(
-        minX: 0,
-        maxX: maxX,
-        minY: 30,
-        maxY: 120,
-        lineBarsData: [
-          LineChartBarData(
-            spots: tempSpots,
-            isCurved: true,
-            color: Colors.orange,
-            barWidth: 3,
-            dotData: FlDotData(show: false),
-          ),
-          LineChartBarData(
-            spots: heartRateSpots,
-            isCurved: true,
-            color: Colors.red,
-            barWidth: 3,
-            dotData: FlDotData(show: false),
-          ),
-          LineChartBarData(
-            spots: spo2Spots,
-            isCurved: true,
-            color: Colors.blue,
-            barWidth: 3,
-          ),
-        ],
-        titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, _) => Text('T${value.toInt()}'),
-              reservedSize: 30,
-            ),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, _) => Text('${value.toInt()}'),
-              reservedSize: 30,
-            ),
+      isShowingMainData
+          ? sampleDataFromTestData(tempData, heartRateData, spo2Data)
+          : altSampleData(),
+      duration: const Duration(milliseconds: 250),
+    );
+  }
+
+  LineChartData sampleDataFromTestData(
+    List<FlSpot> temp,
+    List<FlSpot> heart,
+    List<FlSpot> spo2,
+  ) {
+    final allSpots = [...temp, ...heart, ...spo2];
+    final minX = allSpots.map((e) => e.x).reduce(min);
+    final maxX = allSpots.map((e) => e.x).reduce(max);
+    final minY = allSpots.map((e) => e.y).reduce(min) - 5;
+    final maxY = allSpots.map((e) => e.y).reduce(max) + 5;
+
+    return LineChartData(
+      lineTouchData: LineTouchData(enabled: true),
+      gridData: const FlGridData(show: true),
+      titlesData: FlTitlesData(
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 10,
+            getTitlesWidget:
+                (value, meta) => Text(
+                  value.toInt().toString(),
+                  style: TextStyle(fontSize: 10),
+                ),
           ),
         ),
-        gridData: FlGridData(show: true),
-        borderData: FlBorderData(show: true),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget:
+                (value, meta) => Text(
+                  value.toInt().toString(),
+                  style: TextStyle(fontSize: 10),
+                ),
+          ),
+        ),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
       ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(color: Colors.grey, width: 2),
+          left: BorderSide(color: Colors.grey, width: 2),
+          right: BorderSide(color: Colors.transparent),
+          top: BorderSide(color: Colors.transparent),
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.orange,
+          barWidth: 4,
+          dotData: const FlDotData(show: false),
+          spots: temp,
+        ),
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.red,
+          barWidth: 4,
+          dotData: const FlDotData(show: false),
+          spots: heart,
+        ),
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.blue,
+          barWidth: 4,
+          dotData: const FlDotData(show: false),
+          spots: spo2,
+        ),
+      ],
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+    );
+  }
+
+  LineChartData altSampleData() {
+    return LineChartData(
+      lineBarsData: [],
+      titlesData: FlTitlesData(
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+          ),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+          ),
+        ),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(show: false),
+    );
+  }
+}
+
+class LegendItem extends StatelessWidget {
+  const LegendItem({required this.color, required this.label});
+
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 4),
+        Text(label, style: TextStyle(fontSize: 12)),
+      ],
     );
   }
 }
