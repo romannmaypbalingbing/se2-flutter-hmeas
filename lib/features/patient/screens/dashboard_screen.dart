@@ -1,6 +1,8 @@
 import 'package:vitawatch/features/patient/screens/components/line_chart_main.dart';
 import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 import 'package:vitawatch/features/patient/screens/components/device_status.dart';
+import 'package:vitawatch/features/patient/screens/components/vital_sign_cards.dart';
+import 'package:sliding_action_button/sliding_action_button.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -170,23 +172,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             // VITAL CARDS
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children:
-                      vitalData
-                          .map(
-                            (vital) => _VitalBox(
-                              label: vital['label']!,
-                              value: vital['value']!,
-                            ),
-                          )
-                          .toList(),
-                ),
+              child: const VitalSignCards(
+                // vitalData: [
+                //   {'label': 'Temperature', 'value': '36.7 °C'},
+                //   {'label': 'SPO2', 'value': '98 %'},
+                //   {'label': 'Heart Rate', 'value': '75 bpm'},
+                //   {'label': 'Blood Pressure', 'value': '120/80 mmHg'},
+                // ],
               ),
+            ),
+
+            //slide to action
+            SquareSlideToActionButton(
+              width: double.infinity,
+              parentBoxRadiusValue: 15,
+              initialSlidingActionLabel: 'Alert Guardian',
+              finalSlidingActionLabel: 'Alerted',
+              squareSlidingButtonSize: 50,
+              squareSlidingButtonRadiusValue: 20,
+              squareSlidingButtonIcon: const Icon(
+                Icons.notifications_active,
+                color: Colors.deepPurpleAccent,
+                size: 20,
+              ),
+              squareSlidingButtonBackgroundColor: Colors.white,
+              parentBoxDisableGradientBackgroundColor: LinearGradient(
+                colors: [Colors.lightBlueAccent, Colors.deepPurple],
+              ),
+              parentBoxDisableBackgroundColor: Colors.white,
+              leftEdgeSpacing: 2,
+              rightEdgeSpacing: 4,
+              onSlideActionCompleted: () {
+                print('Slide action completed!');
+              },
+              onSlideActionCanceled: () {
+                print('Slide action cancelled!');
+              },
             ),
           ],
         ),
@@ -195,41 +216,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-      ),
-    );
-  }
-}
-
-class _VitalBox extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _VitalBox({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(color: Colors.black54, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
       ),
     );
   }
