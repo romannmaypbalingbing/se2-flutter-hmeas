@@ -168,45 +168,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // VITAL SIGNS OVERVIEW
             const LineChartMain(),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
 
             // VITAL CARDS
-            Expanded(
-              child: const VitalSignCards(
-                // vitalData: [
-                //   {'label': 'Temperature', 'value': '36.7 °C'},
-                //   {'label': 'SPO2', 'value': '98 %'},
-                //   {'label': 'Heart Rate', 'value': '75 bpm'},
-                //   {'label': 'Blood Pressure', 'value': '120/80 mmHg'},
-                // ],
-              ),
+            const VitalSignCards(
+              // vitalData: [
+              //   {'label': 'Temperature', 'value': '36.7 °C'},
+              //   {'label': 'SPO2', 'value': '98 %'},
+              //   {'label': 'Heart Rate', 'value': '75 bpm'},
+              //   {'label': 'Blood Pressure', 'value': '120/80 mmHg'},
+              // ],
             ),
 
             //slide to action
             SquareSlideToActionButton(
-              width: double.infinity,
+              width: 375,
+              height: 80,
               parentBoxRadiusValue: 15,
               initialSlidingActionLabel: 'Alert Guardian',
               finalSlidingActionLabel: 'Alerted',
-              squareSlidingButtonSize: 50,
-              squareSlidingButtonRadiusValue: 20,
+              squareSlidingButtonSize: 70,
               squareSlidingButtonIcon: const Icon(
-                Icons.notifications_active,
-                color: Colors.deepPurpleAccent,
-                size: 20,
+                // Replace with svg e911 emergency from flutter_svg
+                Icons.warning,
+                color: Color(0xFF081C5D),
               ),
               squareSlidingButtonBackgroundColor: Colors.white,
-              parentBoxDisableGradientBackgroundColor: LinearGradient(
-                colors: [Colors.lightBlueAccent, Colors.deepPurple],
+              parentBoxGradientBackgroundColor: LinearGradient(
+                colors: [Color(0xFF2952D9), Color.fromARGB(255, 167, 195, 255)],
               ),
-              parentBoxDisableBackgroundColor: Colors.white,
-              leftEdgeSpacing: 2,
-              rightEdgeSpacing: 4,
+              parentBoxDisableGradientBackgroundColor: LinearGradient(
+                colors: [Colors.grey],
+              ),
+              leftEdgeSpacing: 6,
+              rightEdgeSpacing: 6,
               onSlideActionCompleted: () {
-                print('Slide action completed!');
+                Text("Sliding action completed");
               },
               onSlideActionCanceled: () {
-                print('Slide action cancelled!');
+                Text("Sliding action cancelled");
               },
             ),
           ],

@@ -19,18 +19,18 @@ class _VitalSignCardsState extends State<VitalSignCards> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: GridView.count(
-        scrollDirection: Axis.horizontal,
-        crossAxisCount: 1,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        children:
-            vitalData
-                .map(
-                  (vital) =>
-                      _VitalBox(label: vital['label']!, value: vital['value']!),
-                )
-                .toList(),
+      child: SizedBox(
+        height: 180, // Adjust height to fit the cards properly
+        child: ListView.separated(
+          clipBehavior: Clip.none,
+          scrollDirection: Axis.horizontal,
+          itemCount: vitalData.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 16),
+          itemBuilder: (context, index) {
+            final vital = vitalData[index];
+            return _VitalBox(label: vital['label']!, value: vital['value']!);
+          },
+        ),
       ),
     );
   }
@@ -45,12 +45,13 @@ class _VitalBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 150, // Fixed width for horizontal layout
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 1)),
         ],
       ),
       child: Column(
