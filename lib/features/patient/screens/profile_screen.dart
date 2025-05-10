@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 // import 'package:myproject/profileFeatures/medicalInfo.dart';
 // import 'package:myproject/profileFeatures/settings.dart';
 // import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  int _currentIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +218,10 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
   }
