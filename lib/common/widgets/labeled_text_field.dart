@@ -30,6 +30,7 @@ class LabeledTextField extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w500,
               fontFamily: 'ClashDisplay',
+              color: Color(0xFF081C5D),
             ),
           ),
           TextFormField(
@@ -37,17 +38,19 @@ class LabeledTextField extends StatelessWidget {
             obscureText: obscureText,
             keyboardType: keyboardType,
             validator: validator,
+            cursorColor: const Color(0xFF081C5D),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w400,
               fontFamily: 'PlusJakartaSans',
+              color: Colors.black,
             ),
             decoration: const InputDecoration(
               border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF4B4B4B), width: 2),
+                borderSide: BorderSide(color: Color(0xFF081C5D), width: 1.5),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF4B4B4B)),
+                borderSide: BorderSide(color: Color(0xFF081C5D), width: 1.5),
               ),
             ),
           ),

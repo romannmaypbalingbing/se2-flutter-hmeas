@@ -34,6 +34,7 @@ class _LoginState extends State<Login> {
             fontSize: 18,
             fontWeight: FontWeight.w400,
             fontFamily: 'ClashDisplay',
+            color: Color(0xFF081C5D),
           ),
         ),
         centerTitle: true,
@@ -51,6 +52,7 @@ class _LoginState extends State<Login> {
                 fontSize: 32,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'ClashDisplay',
+                color: Color(0xFF081C5D),
               ),
             ),
             const Text(
@@ -59,6 +61,7 @@ class _LoginState extends State<Login> {
                 fontSize: 32,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'ClashDisplay',
+                color: Color(0xFF081C5D),
               ),
             ),
 

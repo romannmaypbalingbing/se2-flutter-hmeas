@@ -31,6 +31,7 @@ class AccountTypeScreen extends StatelessWidget {
             fontSize: 18,
             fontWeight: FontWeight.w400,
             fontFamily: 'ClashDisplay',
+            color: Color(0xFF081C5D),
           ),
         ),
         centerTitle: true,
@@ -48,6 +49,7 @@ class AccountTypeScreen extends StatelessWidget {
                 fontSize: 32,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'ClashDisplay',
+                color: Color(0xFF081C5D),
               ),
             ),
             const Text(
@@ -57,6 +59,7 @@ class AccountTypeScreen extends StatelessWidget {
                 fontSize: 32,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'ClashDisplay',
+                color: Color(0xFF081C5D),
               ),
             ),
 
@@ -76,16 +79,13 @@ class AccountTypeScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withValues(alpha: 0.5),
-                    width: 1.0,
-                  ),
+                  border: Border.all(color: Colors.grey, width: 1.0),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      'assets/images/img_placeholder.svg',
+                    Image.asset(
+                      'assets/images/patient_icon.png',
                       width: 60.0,
                       height: 60.0,
                     ),
@@ -99,13 +99,14 @@ class AccountTypeScreen extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'ClashDisplay',
+                            color: Color(0xFF081C5D),
                           ),
                         ),
                         Text(
                           'Access your health dashboard',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
+                            color: Colors.black54,
                             fontFamily: 'PlusJakartaSans',
                           ),
                         ),
@@ -128,16 +129,13 @@ class AccountTypeScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withValues(alpha: 0.5),
-                    width: 1.0,
-                  ),
+                  border: Border.all(color: Colors.grey, width: 1.0),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      'assets/images/img_placeholder.svg',
+                    Image.asset(
+                      'assets/images/guardian_icon.png',
                       width: 60.0,
                       height: 60.0,
                     ),
@@ -152,6 +150,7 @@ class AccountTypeScreen extends StatelessWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
                               fontFamily: 'ClashDisplay',
+                              color: Color(0xFF081C5D),
                             ),
                           ),
                           SizedBox(height: 4.0),
@@ -159,7 +158,7 @@ class AccountTypeScreen extends StatelessWidget {
                             'Stay connected to your loved one’s health and receive alerts in real time.',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey,
+                              color: Colors.black54,
                               fontFamily: 'PlusJakartaSans',
                             ),
                             softWrap: true,
