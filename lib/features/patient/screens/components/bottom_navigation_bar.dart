@@ -27,6 +27,9 @@ class BottomNavBar extends StatelessWidget {
           case 2:
             context.go(PatientRoutes.emergencyAlert);
             break;
+          case 3:
+            context.go(PatientRoutes.profile);
+            break;
         }
       },
 
