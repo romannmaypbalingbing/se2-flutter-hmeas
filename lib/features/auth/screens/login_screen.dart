@@ -2,9 +2,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitawatch/features/auth/routes/auth_routes.dart';
 import 'package:vitawatch/features/patient/routes/patient_routes.dart';
 import 'package:vitawatch/common/widgets/labeled_text_field.dart';
+import 'package:vitawatch/features/auth/providers/auth_providers.dart';
+import 'package:vitawatch/features/auth/providers/auth_state_notifier.dart';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 //add library for error handling >> awesome_snackbar_content.dart
 
@@ -13,14 +17,14 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 ///  A widget that displays a login screen.
 /// Allows users to enter their email and password to log in.
 /// Also provides options for password recovery and Google login.
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends ConsumerState<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -222,8 +226,42 @@ class _LoginState extends State<Login> {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {
-                  // Handle login
+                onPressed: () async {
+                  final authNotifier = ref.read(
+                    authStateNotifierProvider.notifier,
+                  );
+                  try {
+                    debugPrint("Attempting to sign in with Google...");
+                    await authNotifier.signInWithGoogle();
+
+                    if (authNotifier.user == null) {
+                      throw FirebaseAuthException(
+                        code: 'USER_NULL',
+                        message: 'No user data found.',
+                      );
+                    }
+
+                    debugPrint(
+                      "Google Sign in Successful: ${authNotifier.user?.email}",
+                    );
+
+                    if (!context.mounted) return;
+                    context.go(PatientRoutes.dashboard);
+                  } catch (e) {
+                    debugPrint("Google Sign in Failed: $e");
+                    final snackBar = SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Oh Snap!',
+                        message: 'An error occurred. Please try again.',
+                        contentType: ContentType.failure,
+                      ),
+                    );
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(

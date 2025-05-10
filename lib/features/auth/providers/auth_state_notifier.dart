@@ -38,15 +38,25 @@ class AuthStateNotifier extends ChangeNotifier {
     _setLoading(true);
     try {
       final credential = await _authService.signInWithGoogle();
-      _user = credential.user;
+      final user = credential.user;
+      if (user == null) {
+        throw FirebaseAuthException(
+          code: 'USER_NULL',
+          message: 'User data not found',
+        );
+      }
+      _user = user;
+      notifyListeners();
     } catch (e) {
+      _user = null;
+      notifyListeners();
       rethrow;
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> singInWithEmail(String email, String password) async {
+  Future<void> signInWithEmail(String email, String password) async {
     _setLoading(true);
     try {
       final credential = await _authService.signInWithEmailPassword(
