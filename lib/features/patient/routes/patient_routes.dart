@@ -25,5 +25,6 @@ class PatientRoutes {
       path: emergencyAlert,
       builder: (context, state) => const EmergencyAlertScreen(),
     ),
+    GoRoute(path: profile, builder: (context, state) => const ProfileScreen()),
   ];
 }
