@@ -1,8 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitawatch/features/auth/routes/auth_routes.dart';
+import 'package:vitawatch/features/patient/routes/patient_routes.dart';
 import 'package:vitawatch/common/widgets/labeled_text_field.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 //add library for error handling >> awesome_snackbar_content.dart
@@ -134,7 +135,7 @@ class _LoginState extends State<Login> {
                     );
 
                     if (!mounted) return;
-                    context.go(AuthRoutes.dashboard);
+                    context.go(PatientRoutes.dashboard);
                   } on FirebaseAuthException catch (e) {
                     if (!mounted) return;
 

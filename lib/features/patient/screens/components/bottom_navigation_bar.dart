@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:vitawatch/features/patient/routes/patient_routes.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -14,7 +16,20 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      onTap: onTap,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            context.go(PatientRoutes.dashboard);
+            break;
+          case 1:
+            context.go(PatientRoutes.vitalSignsHistory);
+            break;
+          case 2:
+            context.go(PatientRoutes.emergencyAlert);
+            break;
+        }
+      },
+
       backgroundColor: Colors.white,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
