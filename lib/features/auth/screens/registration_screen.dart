@@ -10,6 +10,7 @@ import 'package:vitawatch/constants/user_roles.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitawatch/features/auth/providers/auth_providers.dart';
+import 'package:vitawatch/features/auth/providers/auth_state_notifier.dart';
 
 class RegistrationScreen extends ConsumerStatefulWidget {
   const RegistrationScreen({super.key});
@@ -89,6 +90,7 @@ class _PatientRegistrationScreenState
             fontSize: 18,
             fontWeight: FontWeight.w400,
             fontFamily: 'ClashDisplay',
+            color: Color(0xFF081C5D),
           ),
         ),
         centerTitle: true,
@@ -108,6 +110,7 @@ class _PatientRegistrationScreenState
                   fontSize: 32,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'ClashDisplay',
+                  color: Color(0xFF081C5D),
                 ),
               ),
               const Text(
@@ -116,6 +119,7 @@ class _PatientRegistrationScreenState
                   fontSize: 32,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'ClashDisplay',
+                  color: Color(0xFF081C5D),
                 ),
               ),
               const SizedBox(height: 32),
@@ -185,16 +189,26 @@ class _PatientRegistrationScreenState
                 child: OutlinedButton(
                   onPressed: () async {
                     // Handle login
-                    final authService = ref.read(authServiceProvider);
+                    final authNotifier = ref.read(authStateNotifierProvider);
+
                     try {
-                      final userCredential =
-                          await authService.signInWithGoogle();
-                      debugPrint('User signed in: ${userCredential.user?.uid}');
-                      // Navigate to the next screen after successful login
-                      if (!mounted) return;
-                      context.go(AuthRoutes.createPassword);
+                      await authNotifier.signInWithGoogle();
+
+                      if (authNotifier.user == null) {
+                        throw FirebaseAuthException(
+                          code: 'USER_NULL',
+                          message: 'No user data found.',
+                        );
+                      }
+
+                      debugPrint(
+                        "\n'User signed in with Google: ${authNotifier.user?.email}'\n",
+                      );
+
+                      if (!context.mounted) return;
+                      context.go(AuthRoutes.dashboard);
                     } on FirebaseAuthException catch (e) {
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       showDialog(
                         context: context,
                         builder:
@@ -210,6 +224,7 @@ class _PatientRegistrationScreenState
                             ),
                       );
                     }
+                    debugPrint("\nUser signed in with Google\n");
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(

@@ -9,7 +9,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: goRouter,
       title: 'VitaWatch',
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionHandleColor: Color(0xFF081C5D),
+        ),
+      ),
     );
   }
 }

@@ -8,6 +8,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+}
+
 android {
     namespace = "com.example.vitawatch"
     compileSdk = flutter.compileSdkVersion
