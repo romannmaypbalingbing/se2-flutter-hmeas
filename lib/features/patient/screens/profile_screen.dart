@@ -3,11 +3,9 @@
 // import 'package:myproject/profileFeatures/medicalInfo.dart';
 // import 'package:myproject/screens/login.dart';
 // import 'package:myproject/profileFeatures/settings.dart' as setting;
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,8 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _currentIndex = 3; // Set the current index to the Profile tab
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -38,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       User? user = _auth.currentUser;
       if (user != null) {
         DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+            await _firestore.collection('patient').doc(user.uid).get();
 
         if (userDoc.exists) {
           setState(() {
@@ -71,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           gradient: LinearGradient(
             colors: [
               Colors.blue.shade300,
-              Colors.blue.shade100.withValues(alpha: 0.3),
+              Colors.blue.shade100.withOpacity(0.3),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -198,78 +194,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _buildMenuCard(
                             icon: Icons.medical_information,
                             label: 'Medical Information',
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder:
-                            //           (context) => const MedicalInfoScreen(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder:
+                              //         (context) => const MedicalInfoScreen(),
+                              //   ),
+                              // );
+                            },
                           ),
                           _buildMenuCard(
                             icon: Icons.health_and_safety,
                             label: 'Medical Conditions',
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder:
-                            //           (context) =>
-                            //               const MedicalConditionsScreen(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder:
+                              //         (context) =>
+                              //             const MedicalConditionsScreen(),
+                              //   ),
+                              // );
+                            },
                           ),
                           _buildMenuCard(
                             icon: Icons.medication,
                             label: 'Current Medication',
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder:
-                            //           (context) =>
-                            //               const CurrentMedicationScreen(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder:
+                              //         (context) =>
+                              //             const CurrentMedicationScreen(),
+                              //   ),
+                              // );
+                            },
                           ),
                           _buildMenuCard(
                             icon: Icons.settings,
                             label: 'Settings',
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder:
-                            //           (context) => const setting.Settings(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder:
+                              //         (context) => const setting.Settings(),
+                              //   ),
+                              // );
+                            },
                           ),
                           _buildMenuCard(
                             icon: Icons.logout,
                             label: 'Logout',
-                            // onTap: () {
-                            //   Navigator.pushReplacement(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const LogInPage(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () {
+                              // Navigator.pushReplacement(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const LogInPage(),
+                              //   ),
+                              // );
+                            },
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
   }

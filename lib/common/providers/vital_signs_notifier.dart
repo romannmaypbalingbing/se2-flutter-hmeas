@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+//Manage state of vital signs data, including temperature, heart rate, and SpO2 (blood pressure)
 
 class VitalSignsNotifier extends StateNotifier<Map<String, List<double>>> {
   VitalSignsNotifier()

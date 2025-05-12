@@ -7,12 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vitawatch/features/auth/services/auth_service.dart';
+import 'package:vitawatch/features/auth/providers/auth_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthStateNotifier extends ChangeNotifier {
   final AuthService _authService;
+  final Ref _ref;
 
-  AuthStateNotifier(this._authService) {
+  AuthStateNotifier(this._authService, this._ref) {
     _listenToAuthChanges();
   }
 
@@ -74,11 +78,26 @@ class AuthStateNotifier extends ChangeNotifier {
   Future<void> signUpWithEmail(String email, String password) async {
     _setLoading(true);
     try {
+      final registrationData = _ref.read(registrationDataProvider);
       final credential = await _authService.signUpWithEmailPassword(
         email,
         password,
       );
+      // _user has the registration data
       _user = credential.user;
+      debugPrint('User signed up: ${_user?.uid}');
+      debugPrint(_user?.email);
+
+      if (_user != null) {
+        await FirebaseFirestore.instance
+            .collection(registrationData['role'])
+            .doc(_user!.uid)
+            .set({
+              ...registrationData,
+              'uid': _user!.uid,
+              'createdAt': FieldValue.serverTimestamp(),
+            });
+      }
     } catch (e) {
       rethrow;
     } finally {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 import 'package:vitawatch/features/patient/routes/patient_routes.dart';
 
@@ -14,8 +15,8 @@ class VitalsignsHistoryScreen extends StatefulWidget {
 enum VitalType { heartRate, spo2, temp }
 
 class _VitalsignsHistoryScreenState extends State<VitalsignsHistoryScreen> {
-  String _selectedRange = '6 Month';
-  final List<String> _ranges = ['1 Month', '3 Month', '6 Month', '1 Year'];
+  String _selectedRange = '1 hour';
+  final List<String> _ranges = ['1 hour', '3 hour', '6 hour', '1 day'];
   VitalType _selectedVital = VitalType.heartRate;
 
   // Mock data for each vital
@@ -112,246 +113,312 @@ class _VitalsignsHistoryScreenState extends State<VitalsignsHistoryScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5FD),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.of(context).pop(),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 260,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF081C5D), Color(0xFF2952D9)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '  Vitals History',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          fontFamily: 'ClashDisplay',
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white30,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true, //see changes when
+                            hint: Text(
+                              'Select Range',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            value: _selectedRange,
+                            items:
+                                _ranges
+                                    .map(
+                                      (range) => DropdownMenuItem(
+                                        value: range,
+                                        child: Text(
+                                          range,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                            onChanged: (value) {
+                              if (value != null)
+                                setState(() => _selectedRange = value);
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              height: 40,
+                              width: 60,
+                            ),
+                            iconStyleData: const IconStyleData(
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            dropdownStyleData: DropdownStyleData(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF7893FF),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Tabs Row (above graph)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children:
+                        VitalType.values.map((type) {
+                          final isSelected = _selectedVital == type;
+                          return GestureDetector(
+                            onTap: () => setState(() => _selectedVital = type),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSelected
+                                        ? _vitalColors[type]!.withValues(
+                                          alpha: 0.15,
+                                        )
+                                        : Colors.transparent,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color:
+                                      isSelected
+                                          ? _vitalColors[type]!.withValues(
+                                            alpha: 0.15,
+                                          )
+                                          : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: _vitalColors[type],
+                                    child: Icon(
+                                      _vitalIcons[type],
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _vitalLabels[type]!,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color:
+                                              isSelected
+                                                  ? _vitalColors[type]
+                                                  : Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        _vitalSpots[type]!.last.y
+                                                .toStringAsFixed(
+                                                  type == VitalType.temp
+                                                      ? 1
+                                                      : 0,
+                                                ) +
+                                            ' ' +
+                                            _vitalUnits[type]!,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              isSelected
+                                                  ? _vitalColors[type]
+                                                  : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Graph Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      children: [
+                        // Line Chart
+                        SizedBox(
+                          height: 200,
+                          child: LineChart(
+                            _vitalsChartData(
+                              vitalSpots,
+                              vitalColor,
+                              vitalLabel,
+                              vitalUnit,
+                              _selectedVital,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Month labels
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text("AUG"),
+                            Text("SEP"),
+                            Text("OCT"),
+                            Text("NOV"),
+                            Text("DEC"),
+                            Text("JAN"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // History List
                   const Text(
-                    'Vitals History',
+                    'History',
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
                       fontFamily: 'ClashDisplay',
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedRange,
-                        items:
-                            _ranges
-                                .map(
-                                  (range) => DropdownMenuItem(
-                                    value: range,
-                                    child: Text(
-                                      range,
+                  const SizedBox(height: 8),
+
+                  //cards
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: history.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final item = history[index];
+
+                        return Card(
+                          elevation: 2,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: vitalColor.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  child: Icon(vitalIcon, color: vitalColor),
+                                ),
+
+                                const SizedBox(width: 25),
+
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item['value']!,
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        fontFamily: 'OpenJakartaS',
                                       ),
                                     ),
-                                  ),
-                                )
-                                .toList(),
-                        onChanged: (value) {
-                          if (value != null)
-                            setState(() => _selectedRange = value);
-                        },
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                      ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item['date']!,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-
-              // Tabs Row (above graph)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children:
-                    VitalType.values.map((type) {
-                      final isSelected = _selectedVital == type;
-                      return GestureDetector(
-                        onTap: () => setState(() => _selectedVital = type),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                isSelected
-                                    ? _vitalColors[type]!.withOpacity(0.15)
-                                    : Colors.transparent,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color:
-                                  isSelected
-                                      ? _vitalColors[type]!
-                                      : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 12,
-                                backgroundColor: _vitalColors[type],
-                                child: Icon(
-                                  _vitalIcons[type],
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _vitalLabels[type]!,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color:
-                                          isSelected
-                                              ? _vitalColors[type]
-                                              : Colors.black54,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    _vitalSpots[type]!.last.y.toStringAsFixed(
-                                          type == VitalType.temp ? 1 : 0,
-                                        ) +
-                                        ' ' +
-                                        _vitalUnits[type]!,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          isSelected
-                                              ? _vitalColors[type]
-                                              : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-              ),
-              const SizedBox(height: 16),
-
-              // Graph Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Column(
-                  children: [
-                    // Line Chart
-                    SizedBox(
-                      height: 200,
-                      child: LineChart(
-                        _vitalsChartData(
-                          vitalSpots,
-                          vitalColor,
-                          vitalLabel,
-                          vitalUnit,
-                          _selectedVital,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // Month labels
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text("AUG"),
-                        Text("SEP"),
-                        Text("OCT"),
-                        Text("NOV"),
-                        Text("DEC"),
-                        Text("JAN"),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // History List
-              const Text(
-                'History',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-
-              Expanded(
-                child: ListView.separated(
-                  itemCount: history.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final item = history[index];
-                    return Card(
-                      elevation: 2,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundColor: vitalColor.withOpacity(0.2),
-                              child: Icon(vitalIcon, color: vitalColor),
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['value']!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  item['date']!,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavBar(
@@ -381,12 +448,14 @@ LineChartData _vitalsChartData(
         barWidth: 3,
         spots: spots,
         dotData: FlDotData(show: true),
-        belowBarData: BarAreaData(show: true, color: color.withOpacity(0.2)),
+        belowBarData: BarAreaData(
+          show: true,
+          color: color.withValues(alpha: 0.2),
+        ),
       ),
     ],
     lineTouchData: LineTouchData(
       touchTooltipData: LineTouchTooltipData(
-        // tooltipBgColor: const Color(0xFF081C5D),
         getTooltipItems: (touchedSpots) {
           return touchedSpots.map((spot) {
             return LineTooltipItem(

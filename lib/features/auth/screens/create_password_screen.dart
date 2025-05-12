@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitawatch/common/widgets/labeled_text_field.dart';
 import 'package:vitawatch/common/widgets/step_progress_indicator.dart';
+import 'package:vitawatch/features/auth/routes/auth_routes.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
   const CreatePasswordScreen({super.key});
@@ -29,7 +31,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              // add error screen
+            }
+          },
         ),
         title: const Text(
           'Patient Registration',
@@ -39,9 +47,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             fontFamily: 'ClashDisplay',
           ),
         ),
-        backgroundColor: Colors.white,
       ),
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(

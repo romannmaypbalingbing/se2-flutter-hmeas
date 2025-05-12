@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vitawatch/common/widgets/step_progress_indicator.dart';
 
 import 'package:go_router/go_router.dart';
@@ -122,7 +122,7 @@ class AccountTypeScreen extends StatelessWidget {
             //Guardian Selection Card
             InkWell(
               onTap: () {
-                // navigation to registration screen, with user role 'patient'
+                // navigation to registration screen, with user role 'guardian'
                 context.push(AuthRoutes.registration, extra: UserRole.guardian);
               },
               borderRadius: BorderRadius.circular(8.0),
@@ -155,7 +155,7 @@ class AccountTypeScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.0),
                           Text(
-                            'Stay connected to your loved one’s health and receive alerts in real time.',
+                            'Stay connected to your loved one’s health and receive alerts in real-time.',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
