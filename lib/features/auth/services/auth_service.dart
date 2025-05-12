@@ -1,14 +1,20 @@
 // This file contains google sign in something chuhcu and registration and loggin in logic
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _firestore;
 
-  AuthService({FirebaseAuth? fireBaseAuth, GoogleSignIn? googleSignIn})
-    : _auth = fireBaseAuth ?? FirebaseAuth.instance,
-      _googleSignIn = googleSignIn ?? GoogleSignIn();
+  AuthService({
+    FirebaseAuth? fireBaseAuth,
+    GoogleSignIn? googleSignIn,
+    FirebaseFirestore? firestore,
+  }) : _auth = fireBaseAuth ?? FirebaseAuth.instance,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   //public getter for auth instance
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -59,16 +65,34 @@ class AuthService {
   Future<UserCredential> signUpWithEmailPassword(
     String email,
     String password,
+    String firstName,
+    String lastName,
+    String birthday,
+    String sex,
+    String phoneNumber,
+    String role,
   ) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException {
-      rethrow;
-    } catch (e) {
-      throw Exception('Email/Password Sign-Up failed: $e');
+      // Register user with Firebase Authentication
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // Save additional user data (name, gender, birthday) to Firestore
+      await _firestore.collection(role).doc(userCredential.user?.uid).set({
+        'email': email,
+        'firstname': firstName,
+        'lastname': lastName,
+        'birthday': birthday,
+        'sex': sex,
+        'phoneNumber': phoneNumber,
+        'role': role,
+        'createdAt': FieldValue.serverTimestamp(),
+        'uid': userCredential.user?.uid,
+      });
+
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Error during sign-up: ${e.message}');
     }
   }
 

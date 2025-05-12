@@ -154,6 +154,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                           onPressed: () async {
                             final mobileNumber =
                                 phoneNumberController.text.trim();
+
                             if (mobileNumber.isEmpty ||
                                 mobileNumber.length < 10) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -179,12 +180,48 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                               ...registrationData,
                               'phoneNumber': mobileNumber,
                             };
-
                             debugPrint(
                               'Registration data: ${registrationData.toString()}',
                             );
 
                             context.push(AuthRoutes.dashboard);
+
+                            // Call the Firebase email/password sign-up method
+                            final authService = ref.read(authServiceProvider);
+                            try {
+                              // Attempt to register the user using email and password
+                              UserCredential userCredential = await authService
+                                  .signUpWithEmailPassword(
+                                    registrationData['email'],
+                                    registrationData['password'],
+                                    registrationData['firstName'],
+                                    registrationData['lastName'],
+                                    registrationData['birthday'],
+                                    registrationData['sex'],
+                                    mobileNumber,
+                                    registrationData['role'],
+                                  );
+
+                              // You can access userCredential.user to get user details
+                              debugPrint(
+                                "User created: ${userCredential.user?.email}",
+                              );
+
+                              // Navigate to the next screen or dashboard
+                              if (!context.mounted) return;
+                              context.push(AuthRoutes.dashboard);
+                            } catch (e) {
+                              // Handle any errors that occur during the sign-up process
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: AwesomeSnackbarContent(
+                                    title: 'Error',
+                                    message: 'Failed to create account: $e',
+                                    contentType: ContentType.failure,
+                                  ),
+                                ),
+                              );
+                            }
 
                             // final authService = ref.read(authServiceProvider);
 

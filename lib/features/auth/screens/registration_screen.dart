@@ -10,6 +10,7 @@ import 'package:vitawatch/constants/user_roles.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitawatch/features/auth/providers/auth_providers.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 /// A screen for user registration.
 /// It includes input fields for first name, last name, email, birthday, and sex
@@ -27,11 +28,21 @@ class _PatientRegistrationScreenState
   //create a global key used to access the formstate to validate the form
   final _formKey = GlobalKey<FormState>();
   // controllers for the text fields
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController sexController = TextEditingController();
+
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email', // default scope, to get email
+      'profile', // for getting basic profile information like name, gender, etc.
+      'https://www.googleapis.com/auth/user.birthday.read', // for getting birthday
+      'https://www.googleapis.com/auth/userinfo.profile', // for more profile info
+      'https://www.googleapis.com/auth/contacts.readonly', // for phone number if available
+    ],
+  );
 
   bool _isLoading = false; //used to check if the app is loading
   String? _error; //used to check if there is an error
@@ -59,14 +70,14 @@ class _PatientRegistrationScreenState
 
     try {
       final registrationData = {
+        'email': emailController.text.trim(),
+        'password': '',
         'firstName': firstNameController.text.trim(),
         'lastName': lastNameController.text.trim(),
-        'email': emailController.text.trim(),
         'birthday': birthdayController.text.trim(),
         'sex': sexController.text.trim(),
-        'role': _selectedUserRole?.name,
         'phoneNumber': '',
-        'password': '',
+        'role': _selectedUserRole?.name,
       };
 
       ref.read(registrationDataProvider.notifier).state =
@@ -316,6 +327,14 @@ class _PatientRegistrationScreenState
                               debugPrint(
                                 'User signed up: ${userCredential.user?.email}',
                               );
+
+                              // // Fetch user data
+                              // final user = userCredential.user;
+                              // final userEmail = user?.email;
+                              // final userName = user?.displayName;
+                              // final userPhotoUrl = user?.photoURL;
+                              // final userId = user?.uid;
+
                               // Navigate to the next screen after successful signup
                               if (!context.mounted) return;
                               context.go(AuthRoutes.dashboard);
@@ -424,4 +443,17 @@ class _PatientRegistrationScreenState
     sexController.dispose();
     super.dispose();
   }
+
+  // Future<UserCredential> _signInWithGoogle() async {
+  //   final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  //   final GoogleSignInAuthentication googleAuth =
+  //       await googleUser!.authentication;
+
+  //   final OAuthCredential credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth.accessToken,
+  //     idToken: googleAuth.idToken,
+  //   );
+
+  //   return await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 }

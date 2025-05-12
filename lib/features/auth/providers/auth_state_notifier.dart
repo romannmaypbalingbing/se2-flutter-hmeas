@@ -82,6 +82,12 @@ class AuthStateNotifier extends ChangeNotifier {
       final credential = await _authService.signUpWithEmailPassword(
         email,
         password,
+        registrationData['phoneNumber'],
+        registrationData['firstName'],
+        registrationData['lastName'],
+        registrationData['birthday'],
+        registrationData['sex'],
+        registrationData['role'],
       );
       // _user has the registration data
       _user = credential.user;
