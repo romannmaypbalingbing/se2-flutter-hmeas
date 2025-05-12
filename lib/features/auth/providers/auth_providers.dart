@@ -20,3 +20,5 @@ final authStateNotifierProvider = ChangeNotifierProvider<AuthStateNotifier>((
 final registrationDataProvider = StateProvider<Map<String, dynamic>>(
   (ref) => {},
 );
+
+final verificationIDProvider = StateProvider<String?>((ref) => null);

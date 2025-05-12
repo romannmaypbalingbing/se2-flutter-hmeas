@@ -81,4 +81,32 @@ class AuthService {
       throw Exception('Sign out failed: $e');
     }
   }
+
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential) onVerificationCompleted,
+    required void Function(FirebaseAuthException) onVerificationFailed,
+    required void Function(String verificationId, int? resendToken) onCodeSent,
+    required void Function(String) onCodeAutoRetrievalTimeout,
+  }) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: onVerificationCompleted,
+      verificationFailed: onVerificationFailed,
+      codeSent: onCodeSent,
+      codeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
+      timeout: const Duration(seconds: 60),
+    );
+  }
+
+  Future<UserCredential> verifyOTP({
+    required String verificationId,
+    required String smsCode,
+  }) async {
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+    return await _auth.signInWithCredential(credential);
+  }
 }

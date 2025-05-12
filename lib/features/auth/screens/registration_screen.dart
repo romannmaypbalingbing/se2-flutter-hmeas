@@ -65,6 +65,8 @@ class _PatientRegistrationScreenState
         'birthday': birthdayController.text.trim(),
         'sex': sexController.text.trim(),
         'role': _selectedUserRole?.name,
+        'phoneNumber': '',
+        'password': '',
       };
 
       ref.read(registrationDataProvider.notifier).state =
