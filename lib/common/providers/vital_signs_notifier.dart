@@ -1,5 +1,7 @@
+//access data without refetching and automatically update UI when data changes using riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //Manage state of vital signs data, including temperature, heart rate, and SpO2 (blood pressure)
+import 'package:vitawatch/common/providers/vital_service_provider.dart';
 
 class VitalSignsNotifier extends StateNotifier<Map<String, List<double>>> {
   VitalSignsNotifier()

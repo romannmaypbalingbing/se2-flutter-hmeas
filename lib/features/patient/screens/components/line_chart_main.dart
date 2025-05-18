@@ -2,11 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vitawatch/common/providers/vital_signs_notifier.dart';
-import 'package:vitawatch/features/patient/test/test_data.dart';
+import 'package:vitawatch/common/providers/vital_service_provider.dart';
 
 class LineChartMain extends ConsumerStatefulWidget {
-  const LineChartMain({super.key});
+  final List<Map<String, dynamic>> vitalsList;
+  const LineChartMain({super.key, required this.vitalsList});
 
   @override
   ConsumerState<LineChartMain> createState() => _LineChartMainState();
@@ -17,90 +17,112 @@ class _LineChartMainState extends ConsumerState<LineChartMain> {
 
   @override
   Widget build(BuildContext context) {
-    final vitalSigns = ref.watch(vitalSignsProvider);
+    final vitalSigns = ref.watch(vitalStreamProvider);
+    print('vitalSigns: $vitalSigns');
+    //Uncomment below if using actual data:
+    return vitalSigns.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(child: Text('Error: $error')),
+      data: (vitalSignsList) {
+        if (vitalSignsList.isEmpty) {
+          return const Center(child: Text('No data available'));
+        }
 
-    // Uncomment below if using actual data:
-    // final List<FlSpot> tempData = (vitalSigns['temperature'] ?? []).cast<FlSpot>();
-    // final List<FlSpot> heartRateData = (vitalSigns['heartRate'] ?? []).cast<FlSpot>();
-    // final List<FlSpot> spo2Data = (vitalSigns['spo2'] ?? []).cast<FlSpot>();
+        // Convert to FlSpot for charts
+        final List<FlSpot> heartRateSpots = [];
+        final List<FlSpot> spo2Spots = [];
+        final List<FlSpot> temperatureSpots = [];
 
-    final List<FlSpot> tempData = testTempData;
-    final List<FlSpot> heartRateData = testHeartRateData;
-    final List<FlSpot> spo2Data = testSpo2Data;
+        for (int i = 0; i < vitalSignsList.length; i++) {
+          final vital = vitalSignsList[i];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6,
-                  offset: Offset(0, 4),
+          final heartRate = (vital['heart_rate'] as num?)?.toDouble();
+          final spo2 = (vital['spo2'] as num?)?.toDouble();
+          final temperature = (vital['temperature'] as num?)?.toDouble();
+
+          final x = i.toDouble();
+          if (heartRate != null) heartRateSpots.add(FlSpot(x, heartRate));
+          if (spo2 != null) spo2Spots.add(FlSpot(x, spo2));
+          if (temperature != null) temperatureSpots.add(FlSpot(x, temperature));
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Vital Signs Overview',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'ClashDisplay',
+                    Row(
+                      children: [
+                        const Text(
+                          'Vital Signs Overview',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'ClashDisplay',
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.refresh),
+                          onPressed: () {
+                            setState(() {
+                              isShowingMainData = !isShowingMainData;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+
+                    Wrap(
+                      spacing: 12,
+                      children: [
+                        const LegendItem(color: Colors.blue, label: 'SpO₂'),
+                        const LegendItem(
+                          color: Colors.red,
+                          label: 'Heart Rate',
+                        ),
+                        const LegendItem(
+                          color: Colors.orange,
+                          label: 'Temperature',
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    SizedBox(
+                      height: 150,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: _LineChart(
+                          isShowingMainData: isShowingMainData,
+                          tempData: temperatureSpots,
+                          heartRateData: heartRateSpots,
+                          spo2Data: spo2Spots,
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.refresh),
-                      onPressed: () {
-                        setState(() {
-                          isShowingMainData = !isShowingMainData;
-                        });
-                      },
-                    ),
                   ],
                 ),
-
-                Wrap(
-                  spacing: 12,
-                  children: [
-                    const LegendItem(color: Colors.blue, label: 'SpO₂'),
-                    const LegendItem(color: Colors.red, label: 'Heart Rate'),
-                    const LegendItem(
-                      color: Colors.orange,
-                      label: 'Temperature',
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-
-                SizedBox(
-                  height: 150,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: _LineChart(
-                      isShowingMainData: isShowingMainData,
-                      tempData: tempData,
-                      heartRateData: heartRateData,
-                      spo2Data: spo2Data,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

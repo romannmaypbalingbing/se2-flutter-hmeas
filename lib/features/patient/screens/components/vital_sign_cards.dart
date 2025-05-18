@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 
 class VitalSignCards extends StatefulWidget {
-  const VitalSignCards({super.key});
+  final List<Map<String, dynamic>> vitalData;
+  const VitalSignCards({super.key, required this.vitalData});
 
   @override
   State<VitalSignCards> createState() => _VitalSignCardsState();
 }
 
 class _VitalSignCardsState extends State<VitalSignCards> {
-  final List<Map<String, String>> vitalData = [
-    {'label': 'Temperature', 'value': '36.7 °C'},
-    {'label': 'SPO2', 'value': '98 %'},
-    {'label': 'Heart Rate', 'value': '75 bpm'},
-    {'label': 'Blood Pressure', 'value': '120/80 mmHg'},
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final vitalData = widget.vitalData;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
