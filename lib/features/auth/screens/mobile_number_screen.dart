@@ -184,7 +184,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                               'Registration data: ${registrationData.toString()}',
                             );
 
-                            context.push(AuthRoutes.dashboard);
+                            context.push(AuthRoutes.login);
 
                             // Call the Firebase email/password sign-up method
                             final authService = ref.read(authServiceProvider);
@@ -209,7 +209,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
 
                               // Navigate to the next screen or dashboard
                               if (!context.mounted) return;
-                              context.push(AuthRoutes.dashboard);
+                              context.push(AuthRoutes.login);
                             } catch (e) {
                               // Handle any errors that occur during the sign-up process
                               ScaffoldMessenger.of(context).showSnackBar(

@@ -9,13 +9,27 @@ class VitalSignCards extends StatefulWidget {
 }
 
 class _VitalSignCardsState extends State<VitalSignCards> {
+  List<Map<String, dynamic>>? _oldVitalData;
+
+  @override
+  void didUpdateWidget(covariant VitalSignCards oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // If the data reference changed, rebuild the widget
+    if (oldWidget.vitalData != widget.vitalData) {
+      // Optionally store new data
+      _oldVitalData = widget.vitalData;
+      setState(() {}); // Trigger rebuild with new data
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final vitalData = widget.vitalData;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
-        height: 180, // Adjust height to fit the cards properly
+        height: 140,
         child: ListView.separated(
           clipBehavior: Clip.none,
           scrollDirection: Axis.horizontal,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:myproject/profileFeatures/medDetails.dart';
-import 'package:myproject/profileFeatures/medDetails.dart';
+import 'package:vitawatch/features/patient/screens/profile_screen.dart';
+import 'package:vitawatch/features/patient/screens/components/settings_components/med_details.dart';
 
 class CurrentMedicationScreen extends StatefulWidget {
   const CurrentMedicationScreen({super.key});
@@ -120,7 +120,7 @@ class _CurrentMedicationScreenState extends State<CurrentMedicationScreen> {
         ),
       ),
       body:
-          _isLoadingR
+          _isLoading
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                 padding: const EdgeInsets.all(16),

@@ -2,19 +2,21 @@ import 'package:vitawatch/features/patient/screens/components/line_chart_main.da
 import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 import 'package:vitawatch/features/patient/screens/components/device_status.dart';
 import 'package:vitawatch/features/patient/screens/components/vital_sign_cards.dart';
-import 'package:sliding_action_button/sliding_action_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitawatch/common/providers/vital_service_provider.dart';
 
-class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({super.key});
+class GuardianDashboardScreen extends ConsumerStatefulWidget {
+  const GuardianDashboardScreen({super.key});
 
   @override
-  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<GuardianDashboardScreen> createState() =>
+      _GuardianDashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+class _GuardianDashboardScreenState
+    extends ConsumerState<GuardianDashboardScreen> {
   int _currentIndex = 0;
 
   @override
@@ -196,38 +198,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 VitalSignCards(vitalData: vitalData),
 
                 const SizedBox(height: 20),
-
-                // Slide to action button
-                SquareSlideToActionButton(
-                  width: 375,
-                  height: 80,
-                  parentBoxRadiusValue: 15,
-                  initialSlidingActionLabel: 'Alert Guardian',
-                  finalSlidingActionLabel: 'Alerted',
-                  squareSlidingButtonSize: 70,
-                  squareSlidingButtonIcon: const Icon(
-                    Icons.warning,
-                    color: Color(0xFF081C5D),
-                  ),
-                  squareSlidingButtonBackgroundColor: Colors.white,
-                  parentBoxGradientBackgroundColor: const LinearGradient(
-                    colors: [
-                      Color(0xFF2952D9),
-                      Color.fromARGB(255, 167, 195, 255),
-                    ],
-                  ),
-                  parentBoxDisableGradientBackgroundColor: const LinearGradient(
-                    colors: [Colors.grey],
-                  ),
-                  leftEdgeSpacing: 6,
-                  rightEdgeSpacing: 6,
-                  onSlideActionCompleted: () {
-                    debugPrint("Sliding action completed");
-                  },
-                  onSlideActionCanceled: () {
-                    debugPrint("Sliding action cancelled");
-                  },
-                ),
               ],
             ),
           ),

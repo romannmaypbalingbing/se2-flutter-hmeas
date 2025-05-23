@@ -109,7 +109,6 @@ class _VitalsignsHistoryScreenState
           if (spo2 != null) spo2Spots.add(FlSpot(x, spo2));
           if (temperature != null) temperatureSpots.add(FlSpot(x, temperature));
         }
-        print(vitalsAsync);
 
         return Scaffold(
           backgroundColor: const Color(0xFFF1F5FD),

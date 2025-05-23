@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sliding_action_button/sliding_action_button.dart';
+import 'package:vitawatch/features/patient/screens/components/add_contact_sheet.dart';
 import 'package:vitawatch/features/patient/screens/components/bottom_navigation_bar.dart';
 
 class EmergencyAlertScreen extends StatefulWidget {
@@ -14,10 +14,10 @@ class _EmergencyAlertScreenState extends State<EmergencyAlertScreen> {
 
   final List<Map<String, dynamic>> contacts = [
     {
-      'name': 'John S. Doe',
-      'subtitle': 'Guardian',
-      'status': 'online–in-app',
-      'phone': '<0912 3456 7891>',
+      'name': 'Harold Selfides',
+      'subtitle': '',
+      'status': 'guardian',
+      'phone': '<0912 3456 7890>',
       'alerted': true,
     },
     {
@@ -40,12 +40,108 @@ class _EmergencyAlertScreenState extends State<EmergencyAlertScreen> {
     },
   ];
 
+  void _showAddContactSheet({Map<String, dynamic>? contact, int? index}) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      isScrollControlled: true,
+      builder:
+          (context) => AddContactSheet(
+            existingContact: contact,
+            onAdd: (newContact) {
+              setState(() {
+                if (index == null) {
+                  // Add new contact
+                  contacts.add(newContact);
+                } else {
+                  // Edit existing contact
+                  contacts[index] = newContact;
+                }
+              });
+            },
+          ),
+    );
+  }
+
+  void _showContactOptions(int index) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder:
+          (context) => SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showAddContactSheet(
+                      contact: contacts[index],
+                      index: index,
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _confirmDelete(index);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.close),
+                  title: const Text('Cancel'),
+                  onTap: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+    );
+  }
+
+  void _confirmDelete(int index) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Contact'),
+            content: Text(
+              'Are you sure you want to delete "${contacts[index]['name']}"?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    contacts.removeAt(index);
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => _showAddContactSheet(),
         backgroundColor: const Color(0xFF081C5D),
         child: const Icon(Icons.add),
       ),
@@ -56,7 +152,7 @@ class _EmergencyAlertScreenState extends State<EmergencyAlertScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Gradient background
+            // Background gradient
             Positioned(
               top: 0,
               left: 0,
@@ -77,64 +173,29 @@ class _EmergencyAlertScreenState extends State<EmergencyAlertScreen> {
               ),
             ),
 
-            // Foreground content
+            // Foreground
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 24,
-                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Icon(Icons.arrow_back, color: Colors.white),
+                    children: [
                       Text(
-                        'Edit',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        'Emergency Alert',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontFamily: 'ClashDisplay',
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
+                      Icon(Icons.notifications, color: Colors.white, size: 28),
                     ],
                   ),
                 ),
-
-                // // Slide to action
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                //   child: SquareSlideToActionButton(
-                //     width: double.infinity,
-                //     height: 80,
-                //     parentBoxRadiusValue: 15,
-                //     initialSlidingActionLabel: 'Swipe right to trigger alert',
-                //     finalSlidingActionLabel: 'Alerted',
-                //     squareSlidingButtonSize: 70,
-                //     squareSlidingButtonIcon: const Icon(
-                //       Icons.warning,
-                //       color: Color(0xFF081C5D),
-                //     ),
-                //     squareSlidingButtonBackgroundColor: Colors.white,
-                //     parentBoxGradientBackgroundColor: const LinearGradient(
-                //       colors: [
-                //         Color(0xFF2952D9),
-                //         Color.fromARGB(255, 167, 195, 255),
-                //       ],
-                //     ),
-                //     parentBoxDisableGradientBackgroundColor:
-                //         const LinearGradient(colors: [Colors.grey]),
-                //     leftEdgeSpacing: 6,
-                //     rightEdgeSpacing: 6,
-                //     onSlideActionCompleted: () {
-                //       debugPrint("Sliding action completed");
-                //     },
-                //     onSlideActionCanceled: () {
-                //       debugPrint("Sliding action cancelled");
-                //     },
-                //   ),
-                // ),
                 const SizedBox(height: 24),
-
-                // Guardian label
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -147,69 +208,75 @@ class _EmergencyAlertScreenState extends State<EmergencyAlertScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 12),
 
-                // Contact cards
+                // Contacts list
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: contacts.length,
                     itemBuilder: (context, index) {
                       final contact = contacts[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              contact['name'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
+                      return GestureDetector(
+                        onLongPress: () => _showContactOptions(index),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                contact['name'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(contact['subtitle']),
-                                    if (contact['status'] != null)
-                                      Text(
-                                        contact['status'],
-                                        style: const TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(contact['subtitle'] ?? ''),
+                                      if (contact['status'] != null)
+                                        Text(
+                                          contact['status'],
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                  ],
-                                ),
-                                Text(
-                                  contact['phone'],
-                                  style: const TextStyle(color: Colors.black54),
-                                ),
-                              ],
-                            ),
-                            if (contact['alerted'] == true)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Text(
-                                  'alerted first when emergency triggered',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black38,
+                                    ],
+                                  ),
+                                  Text(
+                                    contact['phone'],
+                                    style: const TextStyle(
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (contact['alerted'] == true)
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    'alerted first when emergency triggered',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.black38,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
